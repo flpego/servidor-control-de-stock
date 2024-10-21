@@ -2,16 +2,19 @@ import db from '../database/connection.database.js';
 
 class ProductModel {
     constructor() { };
-    //Read
-    async getProducts() {
+    //helper funtion
+    async executeQuery(query) {
         try {
-            const query = "SELECT * FROM products"
             const { rows } = await db.query(query);
             return rows;
-
         } catch (error) {
-            throw new Error('Error al buscar productos: ' + error.message);
-        }
+            throw new Error('Database error: ' + error.message);
+        };
+    };
+    //Read
+    async getProducts() {
+        const query = "SELECT * FROM products";
+        return this.executeQuery(query);
     };
     //create
     async addNewProduct({ name, description, price, stock, category, supplier, min_stock }) {
@@ -23,44 +26,31 @@ class ProductModel {
             `,
             values: [name, description, price, stock, category, supplier, min_stock]
         };
-        try {
-            const { rows } = await db.query(query);
-            return rows[0];
-        } catch (error) {
-            throw new Error('Error al buscar productos: ' + error.message);
-
-        }
+        const [product] = await this.executeQuery(query);
+        return product;
     };
-    
+
     //read
-    async findProductByName(name) {
+    async getProductByName(name) {
         const query = {
             text: `
             SELECT * FROM products WHERE name = $1
             `,
             values: [name]
         };
-        try {
-            const { rows } = await db.query(query);
-            return rows[0];
-        } catch (error) {
-            throw new Error('Error al insertar producto en la base: ' + error.message);
-        };
+        const [product] = await this.executeQuery(query);
+        return product;
     };
 
-     async findProductById(id) {
+    async getProductById(id) {
         const query = {
             text: `
             SELECT * FROM products WHERE product_id = $1
             `,
             values: [id]
         };
-        try {
-            const { rows } = await db.query(query);
-            return rows[0];
-        } catch (error) {
-            throw new Error('Error al obtener producto en la base: ' + error.message);
-        };
+        const [product] = await this.executeQuery(query);
+        return product;
     };
 
     //put
@@ -69,19 +59,14 @@ class ProductModel {
             text: `
             UPDATE products
             SET name = $1, description = $2, price = $3, stock = $4, category = $5, supplier = $6, min_stock = $7
-            WHERE id = $8
+            WHERE product_id = $8
             RETURNING name
             `,
             values: [name, description, price, stock, category, supplier, min_stock, id]
         };
-        try {
-            const { rows } = await db.query(query);
-            return rows[0];
+        const [updatedProduct] = await this.executeQuery(query);
+        return updatedProduct;
 
-        } catch (error) {
-            throw new Error('Error al buscar productos: ' + error.message);
-
-        }
     };
     //delete
     async deleteProduct(id) {
@@ -90,16 +75,11 @@ class ProductModel {
             DELETE FROM products WHERE product_id = $1 RETURNING *`,
             values: [id]
         };
-        try {
-            const { rows } = await db.query(query);
-            return rows[0];
-        } catch (error) {
-            throw new Error('Error al buscar productos: ' + error.message);
-
-        };
+        const [deletedProduct] = await this.executeQuery(query);
+        return deletedProduct;
     };
 
-   
+
 };
 
 export default ProductModel;

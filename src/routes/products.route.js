@@ -10,9 +10,9 @@ router.post("/add", (req, res) => productsController.addNewProduct(req, res));
 
 router.route('/:id').
     get((req, res) => productsController.getProductById(req, res))
-    .put()
+    .put((req, res) => productsController.updateProduct(req, res))
     .delete((req, res) => productsController.deleteProduct(req, res));
 
-    
+
 
 export default router;
