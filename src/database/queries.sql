@@ -1,6 +1,6 @@
 
 CREATE TABLE roles (
-    rid SERIAL PRIMARY KEY,
+    RID SERIAL PRIMARY KEY,
     NAME VARCHAR(64) NOT NULL UNIQUE CHECK (NAME IN('ADMIN', 'EMPLOYEE'))
 )
 
@@ -9,7 +9,7 @@ CREATE TABLE USERS (
 	EMAIL VARCHAR(64) NOT NULL UNIQUE,
 	PASSWORD VARCHAR(32) NOT NULL,
 	USERNAME VARCHAR(64),
-    ROLE_ID INT REFERENCES ROLES(ROLE_ID),
+    ROLE_ID INT REFERENCES ROLES(RID) 
 )
 
 
@@ -45,4 +45,21 @@ CREATE TABLE ORDER_PRODUCTS (
     QUANTITY INT NOT NULL,  -- Cantidad del producto en el pedido
     PRIMARY KEY (ORDER_ID, PRODUCT_ID)
 );
+CREATE TABLE sales (
+    sale_id SERIAL PRIMARY KEY,
+    sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount NUMERIC(10, 2) NOT NULL,
+    payment_method VARCHAR(50) -- Ejemplo: efectivo, tarjeta, etc.
+);
+
+CREATE TABLE sale_items (
+    sale_item_id SERIAL PRIMARY KEY,
+    sale_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    price_at_sale NUMERIC(10, 2) NOT NULL, -- Precio al momento de la venta
+    CONSTRAINT fk_sale FOREIGN KEY (sale_id) REFERENCES sales(sale_id),
+    CONSTRAINT fk_product FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
 

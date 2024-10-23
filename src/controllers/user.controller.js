@@ -1,6 +1,6 @@
 import bcryptjs from 'bcryptjs';
-import UserModel from '../models/user.model.js';
 import jwt from 'jsonwebtoken'
+import UserModel from '../models/user.model.js';
 import { handleError } from '../utils/handleErrors.js';
 const userModel = new UserModel();
 
