@@ -1,9 +1,13 @@
 import express, { urlencoded } from 'express';
-import { PORT } from './config.js';
+import { corsConfig, PORT } from './config.js';
 import userRoute from './routes/user.route.js';
 import productsRoute from './routes/products.route.js';
 import salesRoute from './routes/sales.route.js'
+
+//app
 const app = express();
+//cors
+app.use(corsConfig);
 //middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

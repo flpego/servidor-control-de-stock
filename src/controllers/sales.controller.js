@@ -5,28 +5,25 @@ const saleModel = new SaleModel();
 
 
 class SaleController {
-
+    constructor(){};
     async getSales(req, res) {
         try {
             const result = await saleModel.getSales();
-            console.log(result);
-            return res.json(result);
-
+            console.log("Ventas obtenidas:", result);
+            return res.json(result);  // Asegúrate de que la respuesta se envíe correctamente
         } catch (error) {
-            handleError(res, error, "Error al iniciar sesión");
-        };
-    };
-
+            console.error("Error en el controlador de ventas:", error.message);
+            return res.status(500).json({ message: "Error al obtener las ventas" });
+        }
+    }
 
     async registerSale(req, res) {
         try {
-            const { total_amount, payment_method, items } = req.body;
-            const result = await saleModel.registerSale({ total_amount, payment_method, items });
-            res.status(201).json({
-                msg: "venta registrada",
-                data: result
-            });
+            const saleData = req.body;
+            const result = await saleModel.registerSale(saleData);
+            res.status(201).json(result);
         } catch (error) {
+            console.error("Error en registerSale:", error); // Log detallado
             handleError(res, error, "error al resgistrar venta")
         }
 
