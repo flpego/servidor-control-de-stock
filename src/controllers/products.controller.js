@@ -56,6 +56,7 @@ class ProductController {
     async deleteProduct(req, res) {
         try {
             const { id } = req.params;
+            console.log("ID recibido para eliminar:", id);
             const deleteProduct = await productsModel.deleteProduct(id);
             if (!deleteProduct) { return res.status(404).json({ msg: "Producto no encontrado" }) };
 
@@ -65,7 +66,8 @@ class ProductController {
             })
 
         } catch (error) {
-            handleError(res, error, "Error al borrar producto");
+            console.error("Error al eliminar producto:", error);  
+            return   handleError(res, error, "Error al eliminar producto");
 
         }
     }

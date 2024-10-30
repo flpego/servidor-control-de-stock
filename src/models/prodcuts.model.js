@@ -68,8 +68,9 @@ class ProductModel {
         return updatedProduct;
 
     };
-    //delete
+
     async deleteProduct(id) {
+  
         const query = {
             text: `
             DELETE FROM products WHERE product_id = $1 RETURNING *`,
